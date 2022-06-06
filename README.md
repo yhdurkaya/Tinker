@@ -1,2 +1,2 @@
 # Tinker
-Some tinkerin with OpenCV and C++ threads
+Some tinkering with OpenCV and C++ threads
