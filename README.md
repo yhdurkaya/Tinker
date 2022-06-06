@@ -3,7 +3,7 @@ Some tinkering with OpenCV and C++ threads
 
 ## Requirements
 ### Ubuntu 18.04 
-(It is not recommended to try on Ubuntu 20.04 . OpenCV and Gstreamer pipeline has issues and whether you use `FFMPEG` or `V4L` for the back side,t still doesn't work and results in not getting any feed from the camera.  
+(It is not recommended to try on Ubuntu 20.04 . OpenCV and Gstreamer pipeline has issues and whether you use `FFMPEG` or `V4L` for the back side, it still doesn't work and results in not getting any feed from the camera.  
 Just for the warning, `HOURS_WASTED_ON_FIXING_PIPELINE = 6`)  
 
 ### OpenCV 4.2.0  
