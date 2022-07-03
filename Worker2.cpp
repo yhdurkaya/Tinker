@@ -4,13 +4,22 @@
 
 #include "Worker2.h"
 
-Worker2::Worker2() : displayedImage{cv::Mat(640, 480, CV_8UC3, cv::Scalar(0, 0, 0))}
+Worker2::Worker2(cv::Mat& image, std::mutex& mainMutex) : displayedImage{cv::Mat(640, 480, CV_8UC3, cv::Scalar(0, 0, 0))}
 {
-
+    future_ = std::async(std::launch::async, [this, &image, &mainMutex]{
+        while(true)
+        {
+            if(!image.empty())
+            {
+                this->run(image, mainMutex);
+            }
+        }
+    });
 }
 
 void Worker2::LogitechFrameProcessingMagic()
 {
+
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<int> dist6(500,750); // distribution in range [1, 6]
@@ -33,22 +42,23 @@ void Worker2::LogitechFrameProcessingMagic()
     mutex.unlock();
 }
 
-cv::Mat Worker2::run(cv::Mat image)
+void Worker2::run(cv::Mat image, std::mutex& isMutex)
 {
     isMutexAvailable = mutex.try_lock();
 
     if(isMutexAvailable)
     {
         copiedImage = image.clone();
-        std::thread logitechThread(&Worker2::LogitechFrameProcessingMagic, this);
-        logitechThread.detach();
+        LogitechFrameProcessingMagic();
+
+        if(isMutex.try_lock())
+        {
+            cv::imshow( "Worker2", displayedImage);
+            cv::waitKey(5);
+
+            isMutex.unlock();
+        }
     }
-
-}
-
-void Worker2::getResult(cv::Mat& result)
-{
-    result = displayedImage;
 }
 
 double Worker2::calculateMean(cv::Mat &image)
